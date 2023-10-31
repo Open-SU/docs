@@ -1,0 +1,31 @@
+name: Ensure DrawIO is sync
+
+on:
+  pull_request:
+    paths:
+      - "**.drawio"
+
+jobs:
+  check-drawio:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Export DrawIO
+        uses: rlespinasse/drawio-export-action@v2
+        with:
+          format: png
+          transparent: true
+          output: dist
+          remove-page-suffix: true
+
+      - name: Check if any png file changed
+        run: |
+          if [[ -n $(git status -s) ]]; then
+            echo "DrawIO files are not sync with the source files"
+            echo "Please run the export-drawio.sh script and commit the changes"
+            exit 1
+          fi
