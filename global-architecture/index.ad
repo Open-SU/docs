@@ -1,0 +1,14 @@
+= Polycode Microservice Report
+Gomez Alexandre <gomez.a.corneille@gmail.com>
+:toc: auto
+:doctype: book
+:description: This reports describes the global architecture thinking process for making the BDE application.
+:title-logo-image: TODO
+:url-repo: TODO
+
+include::introduction/index.ad[]
+
+:sectnums:
+include::01-identifying_microservices/index.ad[]
+
+include::02-microservices_architecture/index.ad[]
