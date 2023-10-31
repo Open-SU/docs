@@ -1,0 +1,20 @@
+=== Application Objectives
+
+The goal is to create an application that *every student council* can use to help them do their job : making the school a better place for students. To do that, the application will have the following features :
+
+* An *event* system that allows members to create events, and students to attend, pay and have a scannable *ticket* for the council to validate at the entrance of the event. As usually an event comes with transportation, the application will also have a *bus* system that allows members to register buses with their capacity, and students to register to a bus for an event.
+* A *shopping* system that allows members to register products in a shop where students can buy them. Their will also be a *campaign* system where students can buy a product in advance and when the campaign ends the council will order the products and give them to the students (ex: for a class hoodies).
+* A *support* system that allows students to send a message to the council to ask for help or to report a problem. The council can then answer the message and the student can see the answer in the application.
+* A *challenge campaign* system where the members can register a campaign with challenges (ex: the integration of the newcomers) that students can complete to earn points. The members will have an admin panel where they can validate the *proof* and give *points* to the students. The council can then give rewards to the students with the most points.
+* An *organization* system where the council can pass roles and teams to the next council. The admins will have access to a panel where they can give roles and affect members to teams who will have *some access to the application based on their role*.
+
+The frontend of the application should contain all the information for the *students* to know more about the council, the clubs, the life of the school, events etc.To do so the frontend will at least have the following pages :
+
+* A *home* page with the latest news, events and a presentation of the council.
+* An *events* page with all the events and the possibility to register to them.
+* A *shop* page with all the products and the possibility to buy them.
+* A *support* page with a form to send a message to the council.
+* A *challenge* page with all the challenges and the possibility to complete them if a campaign is undergoing.
+* *Council* groups pages with all the information about the group, the members, the clubs, the teams etc.(ex: the *BDE* page, the *BDA* page etc.).
+
+The frontend have to be *temptable* as the application will be used by many different councils. The frontend will be customizable by the council with a *theme* system that allows them to change the colors, the logo, the images etc.The frontend will also be *responsive* to be used on mobile devices.
