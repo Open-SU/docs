@@ -1,0 +1,76 @@
+=== Vocabulary
+
+==== Actors
+
+* *Anonym* - A person that has *no account* on the system.
+
+* *Student* - A person that has a *verified account* on the system.
+
+* *Event Creator* - A Student that has the ability to *manage Events*.
+
+* *Event Moderator* - A *Student* that has the ability to *scan and validate Tickets*.
+
+* *Guest* - A Guest that has been *invited to an Event*.
+
+* *Ticket trader* - A Student that created resell/bug exchange offer.
+
+* *Product Creator* - A Student that has the ability to *manage Products*.
+
+* *Product Moderator* - A Student that has the ability to *manage the delivery state* of a *Product*.
+
+* *Support Moderator* - A Student that has the ability to *see and answer to tickets on the support*.
+
+* *Challenge campaign creator* - A Student that has the ability to *manage Challenge campaigns*.
+
+* *Challenge campaign moderator* - A Student that has the ability to *validate Challenge proofs*.
+
+* *Group Leader* - A Student that has the ability to *manage a Group*.
+
+* *Group Member* - A Student that has another role than *Group Leader* in a *Group*.
+
+* *Admin* - A Student that has the ability to *manage the system and all its entities*.
+
+==== Entities
+
+* *Event* - An event that can be created by an *Event Creator* and attended by *Guests* and *Students*. It can represent a party, a trip, a dinner, etc.
+
+* *Event Ticket* - A ticket that can be bought by *Students* or givend by an *Event Creator* to attend an *Event*.
+
+* *Resell offer* - An offer that can be created by a *Ticket trader* to sell its *Event Ticket*.
+
+* *Bus* - A bus can be registered by an *Event Creator* to be used to transport *Guests* and *Students* to an *Event*.
+
+* *Bus exchange offer* - An offer that can be created by a *Ticket trader* to exchange its *Bus*.
+
+* *Product* - An item that can be created by a *Product Creator* and bought by *Students*. It can represent a t-shirt, a hoodie, a mug, etc.
+
+* *Shopping Campaign* - A campaign that can be created by a *Product Creator* to sell *Products* before he orders them to the supplier (ex: class hoodies).
+
+* *Order* - A Order is created by *Students* to buy *Products*.
+
+* *Support Ticket* - A ticket that can be created by *Students* to ask for help to *Support Moderators*.
+
+* *Challenge campaign* - A campaign that can be created by a *Challenge campaign creator* to challenge *Students* to do some actions (ex: the integration of the newcomers). It can represent a challenge to go to the gym, to eat healthy, to go to the library, etc.
+
+* *Challenge proof* - A proof that can be created by a *Student* to prove that he did the action asked by a *Challenge campaign*.
+
+* *Right* - A right is a permission that can be assigned to a *Role* to give some actions to a *Group Member*.
+
+* *Group* - A Group can be created by an *Admin*, the *Admin* can assign a *Group Leader* role and a list of assignable *Rights*. Groups can be nested into each others so be can create a sort of hierarchy, for example :
+
+====
+* BDE
+** Sponsors team
+* BDA
+** Communication team
+** Clubs
+*** Music club
+*** Dance club
+* BDS
+** Communication team
+** Clubs
+*** Football club
+*** Climbing club
+====
+
+* *Role* - A role that can be assigned to a *Group Member* by the *Group Leader*. It can give *Rights* to the *Group Member* to do some actions on the system. It can represent a member, a vice-leader, a leader, etc.

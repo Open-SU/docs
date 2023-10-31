@@ -1,0 +1,77 @@
+=== User stories
+
+==== Account management
+
+|===
+| As a | I want to | so that
+
+| Anonym | Register myself through my _student email_ | I can use the functionalities accessible only to *Students*
+| Anonym | See information (photo, name, contact) on all *Group members* classified by *Group* | I can see who is in which *Group* and contact them if needed
+| Admin | Create a *Group* | I can use it to classify *Group members*
+| Admin | Create a *Group* inside a *Group* | I can use it to classify *Group members*
+| Admin | Give a *Group* assignable *Rights* | Let *Group Leaders* give them *Rights*
+| Group Leader | Assign a *Role* inside my *Group* to a *Student* | I can use it to classify *Members* of my *Group*
+| Group Leader | Assign a *Right* inside my *Group* to a *Student* | I can use it to give *Rights* to *Members* of my *Group*
+|===
+
+==== Event management
+
+|===
+| As a | I want to | so that
+
+| Anonym | See the calendar of *Events* | I can see what *Events* are available
+| Student | Shotgun an *Event* | I can participate to it
+| Student | Shotgun the *Bus* of an *Event* | I can participate to it
+| Student | Post a *Resell Offer* for an *Event* | I can resell my *Event Ticket*
+| Ticket trader | Tag my *Resell Offer* as sold and give the name of the buyer | He can have my *Event Ticket* transferred to his name
+| Student | Access my QR code for an *Event* | I can use it to check-in
+| Guest | Access my QR code for an *Event* | I can use it to check-in
+| Student | See a history of my passed *Events* | I can see what *Events* I shotgunned
+| Guest | See a history of my passed *Events* | I can see what *Events* I shotgunned
+| Event Moderator | Scan a QR code | I can validate the ticket
+| Event Creator | Create an *Event* | People can shotgun it
+| Event Creator | Create a *Bus* for an *Event* | People can shotgun it
+| Event Creator | Assign *Event Moderators* | They can validate the tickets
+|===
+
+==== Shopping management
+
+|===
+| As a | I want to | so that
+
+| Anonym | See the list of *Products* | I can see what *Products* are available
+| Student | Buy a *Product* | I can get it
+| Student | See a history of my bought *Products* | I can see what *Products* I bought
+| Student | Refund a *Product* | I can get my money back
+| Product Creator | Create a *Product* | People can buy it
+| Product Moderator | Tag a *Product* as ready for pickup | The buyer can get it
+| Product Moderator | Tag a *Product* as picked up | The *Order* can be closed
+| Product Creator | Create a *Shopping Campaign* | People can buy *Products* before i buy them
+|===
+
+==== Support management
+
+|===
+| As a | I want to | so that
+
+| Student | Create a *Support Ticket* | I can get help
+| Support Moderator | Answer a *Ticket* | The *Student* can get help
+| Student | See a history of my *Support Tickets* | I can see what *Support Tickets* I created
+| Student | Close a *Support Ticket* | I can end the demand
+| Support Moderator | Close a *Support Ticket* | I can end the demand
+|===
+
+==== Challenge campaign management
+
+|===
+| As a | I want to | so that
+
+| Student | See the list of *Challenges* when a *Campaign* is undergoing | I can see what *Challenges* are available
+| Student | Send a proof to a *Challenge* | I can get points
+| Student | See a history of my sent proofs | I can see what proofs I sent
+| Student | See the leaderboard of a *Campaign* | I can see who is winning
+| Campaign Creator | Create a *Campaign* | People can send proofs
+| Campaign Creator | Create a *Challenge* | People can send proofs
+| Campaign Creator | Assign *Campaign Moderators* | They can validate the proofs
+| Campaign Moderator | Validate a proof | The *Student* can get points
+|===

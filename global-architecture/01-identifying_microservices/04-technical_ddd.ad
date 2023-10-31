@@ -1,0 +1,142 @@
+=== Technical DDD (Domain Driven Design)
+
+==== Example scenarios
+
+===== Every day shopping
+
+. A *Student* can buy a *Product* from the shop.
+. The server will create a *Order* and hold it until the *Student* has paid or a timeout has occurred.
+. The student is redirected to the payment provider and pays for the *Product*.
+. When the payment is completed the server will remove it from *Stock* and send a notification to a *Product Moderator* that the product has been paid for and send a notification to the *Student* with the invoice.
+. The *Student* can at any time cancel the *Order* and it will tag it as *cancelled*, add the *Product* back in the *Stock* and will *refund* him.
+. The *Product Moderator* will then bring the *Product* to a place of pickup and tag it as *ready for pickup* or bring it directly to the *Student* and tag it as *delivered*.
+. If the product is at a place of pickup the *Student* will be notified that the *Product* is ready for pickup at a certain place.
+. If the *Student* has chosen to cancel the *Order* the *Product Moderator* will return the *Product* to *Stock* and tag the *Order* as *cancelled*, then the student will be *refunded* and the *Product* will be added back to the *Stock*.
+. When the *Student* has picked up the *Product* the *Product Moderator* in charge of the pickup point will tag it as *delivered*.
+. The *Student* can later view his history of *Orders*.
+
+===== Campaign shopping
+
+. A *Student* can buy a *Product* from a *Shopping Campaign*.
+. The server will create a *Order* and hold it until the *Student* has paid or a timeout has occurred.
+. The student is redirected to the payment provider and pays for the *Product*.
+. When the payment is completed the server will add the *Order* to the campaign and send a notification to the *Student* with the invoice.
+. The *Student* can at any time cancel the *Order* and it will tag it as *cancelled* and will *refund* him.
+. When the campaign has ended no one can buy the *Product* anymore and a notification is sent to the *Product Moderators*.
+. The *Product Moderators* will then Order all *Products* to the provider. When they receive the *Products* they will tag them as *ready for pickup* or bring it directly to the *Student* and tag it as *delivered*.
+. If the product is at a place of pickup the *Student* will be notified that the *Product* is ready for pickup at a certain place.
+. When the *Student* has picked up the *Product* the *Product Moderator* in charge of the pickup point will tag it as *delivered*.
+. The *Student* can later view his history of *Orders*.
+
+===== Event shotgun
+
+. A *Student* can buy a *Ticket* to an *Event*.
+. The server will create a *Ticket* entry and hold it until the *Student* has paid or a timeout has occurred.
+. The student is redirected to the payment provider and pays for the *Ticket*.
+. When the payment is completed the server will remove it from *Stock*, send a notification to the *Student* with the invoice and redirect the *Student* to the *Bus* shotgun page where he can select the *Bus* he want to use.
+. When the *Student* has selected a *Bus* the server will remove it from *Stock* and will send a notification to the student with their *Ticket*.
+. In a defined period of time the *Student* can cancel their *Ticket* and it will tag it as *cancelled* and will *refund* him.
+. Until the day of the event the *Student* can create *exchange* requests for their *Bus* or *Resell* requests inside the *Marketplace*.
+. If another *Student* wants to buy the *Ticket* the *Student* will be notified and can accept or decline the request. If he accept the *Ticket* will be transferred to the new *Student* and when this one has paid the *Student* will be *refunded*.
+. If another *Student* wants to exchange the *Bus* the *Student* will be notified and can accept or decline the request. If he accept the *Bus* will be transferred to the new *Student* and he will be affected to the new *Bus*.
+. An *Event creator* can add *Guests* that will receive a notification with their *Ticket* that will be removed from *Stock*.
+. At the day of the *Event* the *Student* will show their *Ticket* to the *Event moderator* and he will tag it as *used*.
+. The *Student* can later view his history of *Events*.
+
+===== Support Ticket System
+
+. A *Student* can create a *Support Ticket* explaining his problem.
+. The *Support Moderator* will receive a notification and can answer the *Student*.
+. When the problem is resolved either the *Student* ot the *Moderator* can tag the ticket as *resolved*.
+. At any time the *Student* can reopen the ticket in his history.
+
+===== Challenge submitting
+
+. A *Student* can submit a *Challenge* when there is a *Challenge Campaign* undergoing.
+. The *Challenge Moderator* will receive a notification and can accept or decline the *Challenge* by visualizing the proof on their panel.
+. If the *Challenge* is accepted the *Student* will receive a notification and points will be added to his *Score*.
+. If the *Challenge* is declined the *Student* will receive a notification and will not receive any points.
+. The *Student* can later view his history of *Challenges*.
+. The *Student* can view the *Challenge Campaign* and the *leader board*.
+. At the end of the *Challenge Campaign* the *Student* with the most points will receive a reward.
+
+==== Aggregates and Entities
+
+* Event
+* Bus
+* Product
+* Event Ticket
+** Status
+* Marketplace Offer
+** Status
+* Shopping Campaign
+* Order
+** Status
+* Stock
+* Proof
+** Status
+* Challenge
+* Challenge Campaign
+* Account
+
+.Relation between aggregates
+image::01-identifying_microservices/resources/dist/aggregates_relation.png[Aggregates Relation, align="center"]
+
+==== Domain Events
+
+===== Shopping
+
+* Order created
+* Order cancelled
+* Order paid
+* Order refunded
+* Order ready for pickup
+* Order delivered
+
+===== Event
+
+* Ticket created
+* Ticket cancelled
+* Ticket paid
+* Ticket bus shotgunned
+* Ticket refunded
+* Ticket exchanged
+* Ticket scanned
+
+* Offer created
+* Offer cancelled
+* Proposal sent
+* Proposal accepted
+* Proposal declined
+* Proposal cancelled
+* Offer sold
+
+===== Support
+
+* Ticket created
+* Ticket resolved
+* Ticket reopened
+
+===== Challenge
+
+* Proof submitted
+* Proof accepted
+* Proof declined
+
+==== SAGA Orchestration pattern
+
+For asynchronous workflow like event shotgun, product buying, challenge submitting, etc. we will use the SAGA Orchestration pattern. The orchestrator will be responsible for the workflow and will send commands to the microservices. The microservices will then send events to the orchestrator to notify it of the status of the workflow. If an error occurs the orchestrator will send compensating commands to the microservices to cancel the workflow.
+
+===== Example for Event shotgun
+
+.Example of a SAGA Event shotgun
+image::01-identifying_microservices/resources/dist/saga_event.png[SAGA Event shotgun, align="center"]
+
+==== API Gateway
+
+By using an API Gateway we will be able to easily expose a simple to use API to the frontend and also to the mobile application as aggregate management become easier. It will also allow us to easily add authentication and authorization to the API.
+
+===== Example aggregation for a Ticket
+
+.Example of a Ticket aggregation
+image::01-identifying_microservices/resources/dist/ticket_aggregation.png[Ticket aggregation, align="center"]
