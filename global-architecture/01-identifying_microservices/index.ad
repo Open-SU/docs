@@ -1,0 +1,11 @@
+== Identifying microservices
+
+include::01-vocabulary.ad[]
+
+include::02-user_stories.ad[]
+
+include::03-domain_anylisis.ad[]
+
+include::04-technical_ddd.ad[]
+
+include::05-microservice_boundaries.ad[]

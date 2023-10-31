@@ -1,0 +1,4 @@
+=== Domain Analysis & bounded contexts
+
+.Domain Analysis of the functionalities of the application
+image::01-identifying_microservices/resources/dist/domain_analysis.png[Domain Analysis, align="center"]
