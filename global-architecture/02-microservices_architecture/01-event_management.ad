@@ -1,0 +1,170 @@
+=== Event Management
+
+==== Event microservice
+
+The *Event* microservice is responsible for managing the *Event* aggregate. It exposes a CRUD on this resource.
+
+===== Event microservice API (RPC)
+
+* listEvents()
+* getEventDetails(eventId)
+* createEvent(event)
+* updateEvent(eventId, event)
+* deleteEvent(eventId)
+
+===== Event entity (relational)
+
+The *Event* entity is composed of the following fields:
+
+* id: UUID
+* name: String
+* description: String (optional)
+* price: Double
+* begin_date: Date
+* end_date: Date
+* cancellation_date: Date (optional, if null then cancellation is not possible)
+* location: Address (optional)
+* organizer: User (organizerId)
+* tags: List<Tag> (optional)
+* updated_at: Date
+* created_at: Date
+
+It will have links with the following *aggregates* :
+
+* Ticket : A List<Ticket> will represent the attendee's tickets to the event
+* Bus : A List<Bus> will represent the buses that will be used to transport the attendees 
+* Stock : A Stock will represent the available ticket stock for the event
+
+==== Ticket microservice
+
+The *Ticket* microservice is responsible for managing the *Ticket* aggregate. It exposes a method to buy a ticket and methods to manage the ticket resource.
+
+===== Ticket microservice API (RPC)
+
+* listEventAttendees(eventId)
+* listBusPassengers(busId)
+* attendEvent(eventId)
+* listEventTickets(eventId)
+* getTicketDetails(ticketId)
+* updateTicket(ticketId, ticket)
+* deleteTicket(ticketId)
+* inviteGuest(guest)
+
+===== Ticket entity (relational)
+
+The *Ticket* entity represents a user's ticket to an event, it is composed of the following fields:
+
+* id: UUID
+* event: Event (eventId)
+* bus: Bus (optional, if null a random bus from stock will be assigned on day of event)
+* attendee: User (attendeeId)
+* vip: Boolean (default false)
+* status: TicketStatus
+* updated_at: Date
+* created_at: Date
+
+TicketStatus is an enum with the following values:
+
+* CREATED
+* CANCELLED
+* PAID
+* BUS_ASSIGNED
+* REFUNDED
+* EXCHANGED
+* SCANNED
+
+It will have links with the following *aggregates* :
+
+* User : A User will represent the user that bought the ticket or the guest that was invited
+* Event : An Event will represent the event the ticket is for
+* Bus : A Bus will represent the bus the user will take to go to the event
+
+==== Bus microservice
+
+The *Bus* microservice is responsible for managing the *Bus* aggregate. It exposes a CRUD on this resource and a method to assign a bus to a ticket.
+
+===== Bus microservice API (RPC)
+
+* listEventBuses(eventId)
+* assignBus(busId, ticketId)
+* getBusDetails(busId)
+* createBus(bus)
+* updateBus(busId, bus)
+* deleteBus(busId)
+
+===== Bus entity (relational)
+
+The *Bus* entity represents a bus that will be used to transport attendees to an event, it is composed of the following fields:
+
+* id: UUID
+* event: Event (eventId)
+* creator: User (creatorId)
+* updated_at: Date
+* created_at: Date
+
+It will have links with the following *aggregates* :
+
+* Event : An Event will represent the event the bus is for
+* Ticket : A List<Ticket> will represent the tickets that will be transported by the bus
+* Stock : A Stock will represent the available bus stock for the event
+* User : A User will represent the user that created the bus
+
+==== Marketplace microservice
+
+The *Marketplace* microservice is responsible for managing the *resell* and *bus exchange* of tickets. It exposes methods to manage resell/bus exchange offers and to buy/accept these offers.
+
+===== Marketplace microservice API (RPC)
+
+* listOffersByEvent(eventId)
+* createOffer(offer)
+* updateOffer(offerId, offer)
+* deleteOffer(offerId)
+* buyOffer(offerId)
+* acceptBuyRequest(requestId)
+
+===== Offer entity (document)
+
+The *Offer* entity represents an offer to resell a ticket or exchange a bus, it is composed of the following fields:
+
+* id: UUID
+* type: OfferTypes
+* ticket: Ticket (ticketId)
+* bus: Bus (busId)
+* status: OfferStatus
+* updated_at: Date
+* created_at: Date
+
+OfferTypes is an enum with the following values:
+
+* RESELL
+* BUS_EXCHANGE
+
+OfferStatus is an enum with the following values:
+
+* CREATED
+* ACCEPTED
+* CANCELLED
+
+It will have links with the following *aggregates* :
+
+* Ticket : A Ticket will represent the ticket that is being resold or bus exchanged
+* Bus : A Bus will represent the bus that the user wants to have in exchange for his ticket's bus
+
+===== BuyRequest entity (relational)
+
+The *BuyRequest* entity represents a request to buy an offer, it is composed of the following fields:
+
+* id: UUID
+* offer: Offer (offerId)
+* buyer: User (buyerId)
+* message: String
+* updated_at: Date
+* created_at: Date
+
+It will have links with the following *aggregates* :
+
+* Offer : An Offer will represent the offer that the user wants to buy
+* User : A User will represent the user that wants to buy the offer
+
+.Diagram of the Event management entities
+image::02-microservices_architecture/resources/dist/event_entities.png[Event entities, align="center"]
