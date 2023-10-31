@@ -7,7 +7,7 @@ on:
   pull_request:
 
 env:
-  INDEX_PATH: "global-architecture/index.ad"
+  INDEX_DIR: "global-architecture"
   ASCIIDOCTOR_ARGS: "-a toc=left -a data-uri"
 
 jobs:
@@ -45,13 +45,13 @@ jobs:
 
       - name: Bump Version
         run: |
-          sed -i "3s/.*/v${{ steps.formatVersion.outputs.buildVersion }}/" ${{ env.INDEX_PATH }}
+          sed -i "3s/.*/v${{ steps.formatVersion.outputs.buildVersion }}/" ${{ env.INDEX_DIR }}/index.ad
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
           name: index.ad
-          path: ${{ env.INDEX_PATH }}
+          path: ${{ env.INDEX_DIR }}/index.ad
 
   commit-version:
     runs-on: ubuntu-latest
@@ -72,10 +72,15 @@ jobs:
         with:
           ssh-key: ${{ secrets.BOT_SSH_KEY }}
 
+      - name: Delete old index.ad
+        run: |
+          rm -f ${{ env.INDEX_DIR }}/index.ad
+
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
           name: index.ad
+          path: ${{ env.INDEX_DIR }}
 
       - name: Commit Version Bump
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -103,15 +108,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Delete old index.ad
+        run: |
+          rm -f ${{ env.INDEX_DIR }}/index.ad
+
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
           name: index.ad
+          path: ${{ env.INDEX_DIR }}
 
       - name: Build html
         uses: tonynv/asciidoctor-action@master
         with:
-          program: "asciidoctor ${{ env.ASCIIDOCTOR_ARGS }} -o public/index.html ${{ env.INDEX_PATH }}"
+          program: "asciidoctor ${{ env.ASCIIDOCTOR_ARGS }} -o public/index.html ${{ env.INDEX_DIR }}/index.ad"
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
@@ -136,10 +146,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Delete old index.ad
+        run: |
+          rm -f ${{ env.INDEX_DIR }}/index.ad
+
       - name: Download artifact
         uses: actions/download-artifact@v3
         with:
           name: index.ad
+          path: ${{ env.INDEX_DIR }}
 
       - name: Install Asciidoctor PDF
         run: |
@@ -148,7 +163,7 @@ jobs:
 
       - name: Build pdf
         run: |
-          asciidoctor-pdf ${{ env.ASCIIDOCTOR_ARGS }} -o index.pdf ${{ env.INDEX_PATH }}
+          asciidoctor-pdf ${{ env.ASCIIDOCTOR_ARGS }} -o index.pdf ${{ env.INDEX_DIR }}/index.ad
 
       - name: Upload artifact
         uses: actions/upload-artifact@v2
