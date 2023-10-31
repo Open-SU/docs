@@ -1,0 +1,71 @@
+=== Account Management
+
+==== Account microservice
+
+The *Account* microservice is responsible for managing the accounts and groups in the system.
+
+===== Account microservice API (RPC)
+
+* listUsers()
+* getUser(userId)
+* createUser(user)
+* updateUser(userId, user)
+* deleteUser(userId)
+* listGroups()
+* getGroup(groupId)
+* createGroup(group)
+* updateGroup(groupId, group)
+* deleteGroup(groupId)
+
+===== User entity (relational)
+
+The *User* entity represents a user in the system, it has the following attributes:
+
+* id: UUID
+* email: String
+* firstName: String
+* lastName: String
+* phone: String (optional)
+* messenger: String (optional)
+* instagram: String (optional)
+* discord: String (optional)
+* preferredContactMethod: ContactMethod (optional)
+* updated_at: Date
+* created_at: Date
+
+The ContactMethod is an enum with the following values:
+
+* EMAIL
+* PHONE
+* MESSENGER
+* INSTAGRAM
+* DISCORD
+
+It will have links with the following *aggregates* :
+
+* Group: a List<Group> that the user belongs to
+* Ticket: a List<Ticket> that the user has bought
+* Payment: a List<Payment> that the user has made
+* Notification: a List<Notification> that the user has received
+* Order: a List<Order> that the user has made
+* Event: a List<Event> that the user has created
+* Product: a List<Product> that the user has created
+* Bus: a List<Bus> that the user has created
+* Offer: a List<Offer> that the user has created
+* BuyRequest: a List<BuyRequest> that the user has created
+
+===== Group entity (document)
+
+The *Group* entity represents a group in the system, groups can be nested to create more complex structures, it has the following attributes:
+
+* id: UUID
+* name: String
+* description: String
+* subGroups: List<Group>
+* users: List<User>
+* updated_at: Date
+* created_at: Date
+
+It will have links with the following *aggregates* :
+
+* User: a List<User> that belongs to the group

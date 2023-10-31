@@ -1,0 +1,93 @@
+=== Technical Microservices
+
+==== Stock microservice
+
+The *Stock* microservice is responsible for managing the stock of entities in the system, it can be shopping *Products*, *Event* tickets, *Bus* tickets etc.
+
+===== Stock microservice API (RPC)
+
+* listItems()
+* getItem(itemId)
+* createItem(item)
+* changeItemStock(itemId, amount)
+* deleteItem(itemId)
+
+===== Item entity (relational)
+
+The *Item* entity represents a stockable item in the system, it has the following attributes:
+
+* id: UUID
+* item: Product | Event | Bus (itemId)
+* quantity: Integer (default 0)
+* created_at: Date
+* updated_at: Date
+
+It will have links with the following *aggregates* :
+
+* Product: the product that this item represents
+* Event: the event that this item represents
+* Bus: the bus that this item represents
+
+==== Payment microservice
+
+The *Payment* microservice is responsible for managing the payments in the system, it can be shopping *Products*, *Event* tickets etc.
+
+===== Payment microservice API (RPC)
+
+* listUserPayments(userId)
+* createPayment(payment)
+
+===== Payment entity (relational)
+
+The *Payment* entity represents a payment record in the system, it has the following attributes:
+
+* id: UUID
+* user: User (userId)
+* amount: Double
+* reason: String
+* status: PaymentStatus (default PENDING)
+* created_at: Date
+* updated_at: Date
+
+PaymentStatus is an enum with the following values:
+
+* PENDING
+* CONFIRMED
+* FAILED
+
+It will have links with the following *aggregates* :
+
+* User: the user that made the payment
+
+==== Notification microservice
+
+The *Notification* microservice is responsible for managing the notifications in the system, it can be status update, payment confirmation etc.
+
+===== Notification microservice API (RPC)
+
+* listUserNotifications(userId)
+* createNotification(notification)
+* deleteNotification(notificationId)
+* markNotificationAsRead(notificationId)
+* markAllNotificationsAsRead(userId)
+
+===== Notification entity (timeseries)
+
+The *Notification* entity represents a notification record in the system, it has the following attributes:
+
+* id: UUID
+* user: User (userId)
+* type: NotificationType
+* message: String
+* seen: Boolean (default false)
+* created_at: Date
+
+The NotificationType is an enum with the following values:
+
+* EMAIL
+* WEBSITE
+* PUSH
+
+It will have links with the following *aggregates* :
+
+* User: the user that will receive the notification
