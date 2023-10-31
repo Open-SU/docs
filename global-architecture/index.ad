@@ -1,5 +1,6 @@
 = Polycode Microservice Report
 Gomez Alexandre <gomez.a.corneille@gmail.com>
+v0.1.0-rc3
 :toc: auto
 :doctype: book
 :description: This reports describes the global architecture thinking process for making the BDE application.

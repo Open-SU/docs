@@ -1,0 +1,155 @@
+name: Deploy Asciidoc
+
+on:
+  push:
+    branches: ["main"]
+    tags: ["v*.*.*"]
+  pull_request:
+
+env:
+  INDEX_PATH: "global-architecture/index.ad"
+  ASCIIDOCTOR_ARGS: "-a toc=left -a data-uri"
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    outputs:
+      buildVersion: ${{ steps.formatVersion.outputs.buildVersion }}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: "5.x"
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+
+      - name: Format version
+        id: formatVersion
+        run: |
+          if [ "${{ steps.gitversion.outputs.CommitsSinceVersionSource }}" = 0 ]; then
+            echo "buildVersion=${{ steps.gitversion.outputs.MajorMinorPatch }}" | tee $GITHUB_OUTPUT
+          else
+            echo "buildVersion=${{ steps.gitversion.outputs.MajorMinorPatch }}-rc${{ steps.gitversion.outputs.CommitsSinceVersionSource }}" | tee $GITHUB_OUTPUT
+          fi
+
+      - name: Bump Version
+        run: |
+          sed -i "3s/.*/v${{ steps.formatVersion.outputs.buildVersion }}/" ${{ env.INDEX_PATH }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: index.ad
+          path: ${{ env.INDEX_PATH }}
+
+  commit-version:
+    runs-on: ubuntu-latest
+
+    needs: [bump-version]
+
+    if: github.ref == 'refs/heads/main'
+
+    concurrency:
+      group: "bump-version"
+      cancel-in-progress: false
+
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: index.ad
+
+      - name: Commit Version Bump
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "build: [skip ci] bump version to ${{ needs.bump-version.outputs.buildVersion }}"
+          commit_options: "-a"
+          commit_author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+
+  deploy-html:
+    runs-on: ubuntu-latest
+
+    if: github.ref == 'refs/heads/main'
+
+    needs: [bump-version]
+
+    concurrency:
+      group: "pages"
+      cancel-in-progress: false
+
+    permissions:
+      contents: read
+      id-token: write
+      pages: write
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: index.ad
+
+      - name: Build html
+        uses: tonynv/asciidoctor-action@master
+        with:
+          program: "asciidoctor ${{ env.ASCIIDOCTOR_ARGS }} -o public/index.html ${{ env.INDEX_PATH }}"
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+
+  deploy-pdf:
+    runs-on: ubuntu-latest
+
+    needs: [bump-version]
+
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: index.ad
+
+      - name: Install Asciidoctor PDF
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ruby-asciidoctor-pdf
+
+      - name: Build pdf
+        run: |
+          asciidoctor-pdf ${{ env.ASCIIDOCTOR_ARGS }} -o index.pdf ${{ env.INDEX_PATH }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: repport.pdf
+          path: index.pdf
